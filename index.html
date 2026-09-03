@@ -1,0 +1,674 @@
+```
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bangkok Soundscape — พิพิธภัณฑ์ดนตรีดิจิทัลกรุงเทพฯ</title>
+<style>
+:root{
+  --bg:#030303;--bg2:#0a0a0a;--wine:#1a1a1a;--wine2:#8e2848;
+  --gold:#d9ad55;--gold2:#c99645;--ivory:#fff7e8;--muted:#c3b8c3;
+  --cyan:#81dbe2;--glass:rgba(255,255,255,.055);--line:rgba(241,209,138,.20);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ivory);font-family:system-ui,-apple-system,"Noto Sans Thai","Segoe UI",sans-serif;
+  min-height:100vh;overflow-x:hidden;
+  background:
+    radial-gradient(circle at 12% 8%,rgba(142,40,72,.22),transparent 23%),
+    radial-gradient(circle at 88% 20%,rgba(129,219,226,.08),transparent 22%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 48%,#08070b);
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.22;
+  background:
+    linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);
+  background-size:30px 30px;
+}
+body:after{
+  content:"";position:fixed;left:0;right:0;bottom:0;height:28vh;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.68));
+}
+.wrap{width:min(1120px,calc(100% - 28px));margin:auto;padding:14px 0 54px}
+.topbar{
+  position:sticky;top:10px;z-index:80;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:10px 12px;margin-bottom:18px;border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;background:rgba(8,7,13,.76);backdrop-filter:blur(18px);box-shadow:0 18px 56px #0008
+}
+.brand{display:flex;align-items:center;gap:10px}.brandmark{
+  width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-family:serif;font-weight:900;color:#31131a;
+  background:radial-gradient(circle at 35% 30%,#fff1ba,var(--gold2));box-shadow:0 0 26px rgba(241,209,138,.16)
+}
+.brand small{display:block;color:#a99fac;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+.brand b{font-size:14px}
+.score{font-size:13px;color:#e8d7b5;padding:8px 11px;border-radius:999px;background:#ffffff08;border:1px solid #ffffff0d}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:100;background:transparent}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#d06386);transition:.3s}
+
+.station{display:none;min-height:calc(100vh - 110px);align-items:center}
+.station.active{display:flex}
+.panel{
+  width:100%;position:relative;overflow:hidden;padding:clamp(23px,5vw,56px);border-radius:34px;
+  border:1px solid rgba(255,255,255,.085);
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.022));
+  backdrop-filter:blur(18px);box-shadow:0 30px 100px #0009
+}
+.panel:before{
+  content:"";position:absolute;inset:12px;border-radius:27px;border:1px solid rgba(241,209,138,.055);pointer-events:none
+}
+.orn{position:absolute;color:rgba(241,209,138,.20);font-family:serif;font-size:34px;pointer-events:none}
+.orn.tl{left:24px;top:14px}.orn.tr{right:24px;top:14px}.orn.bl{left:24px;bottom:12px}.orn.br{right:24px;bottom:12px}
+.tag{display:inline-flex;gap:7px;align-items:center;color:var(--gold);font-size:11px;font-weight:900;letter-spacing:.20em;text-transform:uppercase}
+.tag:before,.tag:after{content:"✦";font-size:8px;color:var(--gold2)}
+h1,h2,h3,p{position:relative;z-index:2}
+h1{font-size:clamp(50px,9vw,108px);line-height:.86;letter-spacing:-.055em;margin:12px 0 18px}
+h2{font-size:clamp(31px,6vw,62px);line-height:1.04;letter-spacing:-.035em;margin:10px 0 16px}
+h3{font-size:21px;margin:8px 0 7px}
+p{line-height:1.78;color:var(--muted);font-size:16px}
+.small{font-size:13px}.muted{color:#918894}
+.thai-divider{display:flex;align-items:center;justify-content:center;gap:14px;color:var(--gold);opacity:.6;margin:22px 0}
+.thai-divider:before,.thai-divider:after{content:"";height:1px;width:min(160px,25vw);background:linear-gradient(90deg,transparent,rgba(241,209,138,.6))}
+.thai-divider:after{transform:scaleX(-1)}
+
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}
+.hero-thai{display:block;font-size:clamp(23px,4vw,42px);letter-spacing:0;color:#ead7ad;margin-top:15px}
+.hero-art{min-height:420px;position:relative;display:grid;place-items:center}
+.disc{
+  position:relative;width:190px;height:190px;border-radius:50%;background:
+  radial-gradient(circle,#f3d88f 0 8%,#451224 9% 18%,#08080d 19% 39%,#36202a 40% 42%,#07070b 43% 100%);
+  box-shadow:0 0 90px rgba(241,209,138,.12),0 32px 70px #000c;animation:spin 10s linear infinite
+}
+.disc:after{content:"๑";position:absolute;inset:0;display:grid;place-items:center;font-family:serif;font-size:52px;color:var(--gold);text-shadow:0 0 26px #f1d18a44}
+.orbit{position:absolute;border:1px solid rgba(241,209,138,.17);border-radius:50%;animation:spin 20s linear infinite}
+.orbit.o1{width:315px;height:315px}.orbit.o2{width:250px;height:250px;animation-direction:reverse;animation-duration:14s}
+.hero-art:after{
+  content:"";position:absolute;width:390px;height:120px;bottom:24px;
+  background:radial-gradient(ellipse at center,rgba(241,209,138,.16),transparent 66%);filter:blur(18px)
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+button,.btn{
+  appearance:none;border:0;border-radius:999px;padding:13px 19px;margin:5px;font-size:15px;font-weight:850;cursor:pointer;
+  color:#2b1418;background:linear-gradient(135deg,#f8e1a5,#d2a050);box-shadow:0 12px 30px rgba(210,160,80,.14);
+  transition:.22s;position:relative;z-index:10;touch-action:manipulation
+}
+button:hover{transform:translateY(-2px)}
+button.secondary{background:#ffffff08;color:#f5eddd;border:1px solid #ffffff12;box-shadow:none}
+button.ghost{background:transparent;color:#ddcba7;border:1px solid var(--line);box-shadow:none}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card,.stop,.sound-card{
+  position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:20px;
+  background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.025));transition:.24s
+}
+.card:hover,.stop:hover,.sound-card:hover{transform:translateY(-4px);border-color:rgba(241,209,138,.28);box-shadow:0 18px 50px #0007}
+.card:before,.stop:before,.sound-card:before{
+  content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 0 42%,rgba(255,255,255,.05) 49%,transparent 56%);
+  transform:translateX(-125%);transition:.7s
+}
+.card:hover:before,.stop:hover:before,.sound-card:hover:before{transform:translateX(125%)}
+.note{font-size:38px;color:var(--gold)}
+.num{position:absolute;right:15px;top:0;font-size:58px;font-weight:950;color:#f1d18a0e}
+
+.map-shell{
+  position:relative;min-height:560px;overflow:hidden;border-radius:28px;border:1px solid rgba(255,255,255,.08);
+  background:radial-gradient(circle at 68% 30%,rgba(129,219,226,.08),transparent 25%),linear-gradient(180deg,#11101d,#0b0910)
+}
+.map-shell svg{position:absolute;inset:0;width:100%;height:100%;opacity:.54}
+.route{position:relative;z-index:4;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:22px}
+.stop{cursor:pointer;min-height:138px;background:rgba(10,9,16,.80);backdrop-filter:blur(12px)}
+.stop .chip{display:inline-block;padding:5px 8px;border-radius:999px;border:1px solid rgba(241,209,138,.22);color:var(--gold);font-size:10px;letter-spacing:.12em}
+.stop b{display:block;font-size:18px;color:#fff0cb;margin:9px 0}.stop small{color:#9c93a1}
+
+.timeline{display:grid;gap:12px}
+.timeline .card{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:start}
+.timeline .year{font-size:25px;color:var(--gold);font-weight:900}
+
+.instrument-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sound-card{padding:17px;text-align:center}
+.sigil{
+  width:58px;height:58px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;font-weight:950;font-size:23px;color:#2d1418;
+  background:radial-gradient(circle at 32% 27%,#fff1ba,var(--gold2));box-shadow:0 8px 24px rgba(210,160,80,.16)
+}
+.sound-card strong{display:block;color:#fff1cc;font-size:22px}.sound-card span{font-size:12px;color:#aba1ad}
+.sound-card button{width:calc(100% - 10px);margin-top:12px}
+.now-playing{margin-top:18px;padding:13px 15px;border-radius:18px;background:#ffffff05;border:1px solid #ffffff0d;color:#cfc2ce;font-size:14px}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#d76280;margin-right:8px;box-shadow:0 0 12px #d76280}
+.live-dot.playing{animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.55);opacity:.55}}
+
+.quiz button{display:block;width:100%;text-align:left;margin:8px 0;background:#ffffff06;color:#fff;border:1px solid #ffffff0e;box-shadow:none}
+.feedback{min-height:36px;font-weight:850;color:#f2d899;margin-top:10px}
+.source a{color:#9ce4e8}
+.credit{padding:14px;border-radius:18px;background:#ffffff04;border:1px solid #ffffff09;margin-top:12px}
+
+.sound-gate{
+  position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;
+  background:radial-gradient(circle at 50% 16%,rgba(241,209,138,.15),transparent 28%),linear-gradient(180deg,#06060a,#1c0913 72%,#06060a)
+}
+.sound-gate.hide{display:none}
+.gate-card{
+  width:min(720px,100%);text-align:center;padding:clamp(34px,7vw,68px);border-radius:34px;
+  border:1px solid rgba(241,209,138,.28);background:linear-gradient(180deg,rgba(100,23,47,.28),rgba(11,9,16,.94));box-shadow:0 35px 120px #000c
+}
+.gate-mark{font-family:serif;font-size:42px;color:var(--gold);letter-spacing:.22em}
+.eq{display:flex;gap:5px;justify-content:center;align-items:flex-end;height:32px;margin:17px 0}
+.eq i{width:4px;background:linear-gradient(var(--gold),#b95779);border-radius:99px;animation:eq 1s ease-in-out infinite alternate}
+.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}.eq i:nth-child(4){animation-delay:.1s}.eq i:nth-child(5){animation-delay:.3s}
+@keyframes eq{from{height:7px}to{height:31px}}
+
+.footer{padding:30px 0 10px;text-align:center;color:#7e7684;font-size:12px}
+@media(max-width:820px){
+  .hero-grid{grid-template-columns:1fr}.hero-art{min-height:300px}
+  .route,.grid{grid-template-columns:1fr}.instrument-grid{grid-template-columns:repeat(2,1fr)}
+  .timeline .card{grid-template-columns:1fr}
+}
+@media(max-width:480px){.instrument-grid{grid-template-columns:1fr}.panel{border-radius:26px}h1{font-size:49px}.topbar{top:6px}}
+
+.certificate{margin:22px auto;padding:18px;max-width:900px;background:#fff7df;color:#351722;border:2px solid #c89a49}
+.cert-inner{padding:42px 24px;border:4px double #9b7133;text-align:center;min-height:500px}
+.cert-inner p{color:#60484a}.cert-name{font-size:32px;font-weight:900;color:#6b1d35;margin:24px auto;border-bottom:1px solid #9b7133;max-width:580px;padding:8px}
+.cert-input{width:min(520px,100%);padding:13px;border-radius:14px;border:1px solid #d3b578;background:#09080d;color:white;font-size:17px;text-align:center}
+@media print{body *{visibility:hidden!important}#certificate,#certificate *{visibility:visible!important}#certificate{position:absolute;inset:0;width:100%;margin:0}}
+
+/* LUXE CERTIFICATE UPGRADE */
+.certificate{position:relative;background:radial-gradient(circle at 50% 0,#fffdf4 0,#f7e8bd 55%,#e8cf91 100%);border:1px solid #b88a3e;box-shadow:0 28px 90px rgba(0,0,0,.45);overflow:hidden}
+.certificate:before,.certificate:after{content:"✦";position:absolute;font-size:110px;color:rgba(122,75,35,.08);transform:rotate(20deg)}
+.certificate:before{left:-15px;top:-25px}.certificate:after{right:-10px;bottom:-35px}
+.cert-inner{position:relative;border:1px solid #c79a4c;outline:4px double #8d622e;outline-offset:-12px;padding:52px 34px;background:linear-gradient(135deg,rgba(255,255,255,.36),transparent 45%)}
+.cert-inner:before{content:"BANGKOK • MUSIC • HERITAGE";display:block;font-size:10px;letter-spacing:.35em;color:#8b6737;margin-bottom:16px}
+.cert-seal{width:82px;height:82px;border-radius:50%;margin:22px auto 8px;display:grid;place-items:center;border:2px solid #9a6b30;outline:1px solid #9a6b30;outline-offset:5px;font-size:32px;color:#7b263d;background:#f8e8b9;box-shadow:0 8px 20px #70431f22}
+.cert-ribbon{display:inline-block;padding:7px 18px;margin-top:12px;border-top:1px solid #b48a4a;border-bottom:1px solid #b48a4a;font-size:11px;letter-spacing:.2em;color:#79552b}
+#certName{font-family:Georgia,'Times New Roman',serif;font-size:clamp(28px,5vw,42px);font-style:italic}
+.cert-input:focus{border-color:#f1d18a;box-shadow:0 0 0 4px rgba(241,209,138,.1)}
+
+.sound-card p.small{min-height:92px;text-align:left;color:#c3b8c3;line-height:1.65;margin:10px 0 4px}
+@media(max-width:820px){.sound-card p.small{min-height:auto}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div id="gate" class="sound-gate">
+  <div class="gate-card">
+    <div class="gate-mark">✦ ๑ ✦</div>
+    <div class="tag">Bangkok Digital Thai Music Museum</div>
+    <h2 style="margin-top:13px">BANGKOK SOUNDSCAPE</h2>
+    <p>พิพิธภัณฑ์ดนตรีดิจิทัลกรุงเทพฯ<br>สำรวจเรื่องราว ฟังเสียงเครื่องดนตรีจริง และทดลองสร้างจังหวะผ่านเว็บไซต์</p>
+    <div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
+    <button id="enterBtn">🎧 แตะเพื่อเข้าสู่นิทรรศการ</button>
+    <p class="small muted">เสียงจะเริ่มเมื่อผู้ใช้กดปุ่ม เพื่อรองรับ Safari และโทรศัพท์มือถือ</p>
+  </div>
+</div>
+
+<div class="progress"><i id="bar"></i></div>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><div class="brandmark">๑</div><div><small>Digital Museum</small><b>Bangkok Soundscape</b></div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+      <div class="score">🎵 คะแนน <b id="score">0</b>/12</div>
+      <div class="score">🟢 ออนไลน์ <b id="visitorCount">0</b> คน</div>
+      <div class="score">👁️ เข้าชมทั้งหมด <b id="totalVisitorCount">0</b> ครั้ง</div>
+    </div>
+  </div>
+
+  <section id="home" class="station active">
+    <div class="panel">
+      <span class="orn tl">❖</span><span class="orn tr">❖</span><span class="orn bl">❖</span><span class="orn br">❖</span>
+      <div class="hero-grid">
+        <div>
+          <div class="tag">โครงงานวิชาดนตรีไทย • ม.6</div>
+          <h1>BANGKOK<br>SOUNDSCAPE <span class="hero-thai">ท่องกรุงเทพฯ ผ่านเสียงดนตรี</span></h1>
+          <p>สำรวจร่องรอยดนตรีไทย การสืบทอดโดยกรุงเทพมหานคร และพื้นที่ดนตรีร่วมสมัย ผ่านนิทรรศการออนไลน์ที่สามารถอ่าน ฟัง และทดลองเสียงได้จริง</p>
+          <div class="actions"><button data-nav="mission">เริ่มออกเดินทาง →</button></div>
+        </div>
+        <div class="hero-art"><div class="orbit o1"></div><div class="orbit o2"></div><div class="disc"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mission" class="station"><div class="panel">
+    <div class="tag">YOUR MISSION</div><h2>ภารกิจของ Sound Explorer</h2><div class="thai-divider">❖</div>
+    <div class="grid">
+      <div class="card"><div class="num">01</div><div class="note">๑</div><h3>รู้จักเครื่องดนตรี</h3><p>เรียนรู้ลักษณะและฟังเสียงจริงของระนาดเอก ฉิ่ง ฆ้องวงใหญ่ และตะโพน พร้อมทดลองเสียงใน Station 01</p></div>
+      <div class="card"><div class="num">02</div><div class="note">๒</div><h3>เมืองที่สืบทอดเสียง</h3><p>สำรวจการส่งเสริมและถ่ายทอดดนตรีของกรุงเทพมหานครจากอดีตถึงปัจจุบัน</p></div>
+      <div class="card"><div class="num">03</div><div class="note">๓</div><h3>มองกรุงเทพฯ วันนี้</h3><p>สำรวจดนตรีในพื้นที่สาธารณะและ Bangkok Street Performer</p></div>
+      <div class="card"><div class="num">12</div><div class="note">✦</div><h3>พิชิต Final Quiz</h3><p>ตอบคำถาม 12 ข้อที่สุ่มใหม่ทุกครั้งที่เปิดเว็บไซต์ และสะสม Music Notes</p></div>
+    </div>
+    <div class="actions"><button data-nav="map">รับภารกิจ →</button><button class="secondary" data-nav="home">← กลับ</button></div>
+  </div></section>
+
+  <section id="map" class="station"><div class="panel">
+    <div class="tag">EXHIBITION ROUTE</div><h2>เลือกสถานีสำรวจ</h2><div class="thai-divider">❖</div>
+    <div class="map-shell">
+      <svg viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M70 420 C210 265 365 505 520 315 S770 190 940 335" stroke="#f1d18a" stroke-opacity=".38" stroke-width="3" fill="none" stroke-dasharray="9 14"/>
+        <path d="M500 -30 C540 120 455 235 522 360 S610 525 575 650" stroke="#81dbe2" stroke-opacity=".13" stroke-width="58" fill="none"/>
+      </svg>
+      <div class="route">
+        <div class="stop" data-nav="station1"><span class="chip">STATION 01</span><b>เครื่องดนตรีไทย + Sound Lab</b><small>ลักษณะและเสียงจริง 4 ชนิด</small></div>
+        <div class="stop" data-nav="station2"><span class="chip">STATION 02</span><b>เมืองที่สืบทอดเสียง</b><small>จาก พ.ศ. 2506 ถึงปัจจุบัน</small></div>
+        <div class="stop" data-nav="station3"><span class="chip">STATION 03</span><b>Bangkok Today</b><small>ดนตรีในพื้นที่สาธารณะ</small></div>
+        <div class="stop" data-nav="quiz"><span class="chip">FINAL CHALLENGE</span><b>Quiz 12 ข้อ</b><small>สุ่ม 12 ข้อจากคลัง 20 ข้อ พร้อมสุ่มตัวเลือกทุกครั้ง</small></div>
+      </div>
+    </div>
+    <div class="actions"><button class="secondary" data-nav="home">← กลับหน้าแรก</button></div>
+  </div></section>
+<section id="station1" class="station"><div class="panel">
+    <div class="tag">STATION 01 • DIGITAL COLLECTION + SOUND LAB</div>
+    <h2>รู้จักเครื่องดนตรีไทยและทดลองฟังเสียงจริง</h2><div class="thai-divider">❖</div>
+    <p>สถานีนี้รวมข้อมูลเครื่องดนตรีและกิจกรรม Sound Lab ไว้ในหน้าเดียว ผู้ใช้งานสามารถอ่านลักษณะสำคัญของเครื่องดนตรีแต่ละชนิด แล้วกดฟังเสียงบันทึกจริงเพื่อเปรียบเทียบลักษณะเสียงได้ทันที โดยไม่มีเสียงบรรยายก่อนเล่น</p>
+
+    <div class="grid">
+      <div class="sound-card">
+        <div class="sigil">ร</div><strong>ระนาดเอก</strong><span>RANAT EK • เครื่องตีดำเนินทำนอง</span>
+        <p class="small">มีลูกระนาดเรียงจากเสียงต่ำไปสูง แขวนเหนือรางรูปเรือ ใช้ไม้ตีบรรเลง ทำนองมีความคล่องตัวและโดดเด่นในวงดนตรีไทย</p>
+        <button data-audio="ranat">▶ ฟังเสียงระนาดเอก</button>
+      </div>
+      <div class="sound-card">
+        <div class="sigil">ฉ</div><strong>ฉิ่ง</strong><span>CHING • เครื่องกำกับจังหวะ</span>
+        <p class="small">เป็นฉาบโลหะขนาดเล็กหนึ่งคู่ รูปร่างคล้ายถ้วย ใช้ตีหรือประกบกันให้เกิดเสียง “ฉิ่ง–ฉับ” เพื่อช่วยกำกับจังหวะและหน้าทับ</p>
+        <button data-audio="ching">▶ ฟังเสียงฉิ่ง</button>
+      </div>
+      <div class="sound-card">
+        <div class="sigil">ฆ</div><strong>ฆ้องวงใหญ่</strong><span>KHONG WONG YAI • เครื่องตีดำเนินทำนอง</span>
+        <p class="small">ประกอบด้วยลูกฆ้อง 16 ลูกเรียงบนร้านฆ้องเป็นวงกลม ผู้บรรเลงนั่งกลางวงและใช้ไม้ตี ทำให้เกิดเสียงกังวานหลายระดับ</p>
+        <button data-audio="khong">▶ ฟังเสียงฆ้องวงใหญ่</button>
+      </div>
+      <div class="sound-card">
+        <div class="sigil">ต</div><strong>ตะโพน</strong><span>TAPHON • เครื่องกำกับจังหวะ</span>
+        <p class="small">เป็นกลองสองหน้าทรงป่องตรงกลาง ขึงหนังทั้งสองด้าน ใช้ฝ่ามือและนิ้วตีเพื่อสร้างรูปแบบจังหวะและช่วยกำกับการดำเนินเพลง</p>
+        <button data-audio="taphon">▶ ฟังเสียงตะโพน</button>
+      </div>
+    </div>
+
+    <div class="now-playing"><span id="liveDot" class="live-dot"></span><span id="nowPlaying">เลือกเครื่องดนตรีเพื่อเริ่มฟัง</span></div>
+    <div class="card" style="margin-top:18px">
+      <h3>🎛️ Sound Lab</h3>
+      <p>ลองกดเสียงของเครื่องดนตรีแต่ละชนิดสลับกัน เพื่อเปรียบเทียบเสียงสูง–ต่ำ ความกังวาน และลักษณะจังหวะของเครื่องดนตรีทั้ง 4 ชนิด</p>
+      <div class="actions">
+        <button data-audio="ranat">ระนาดเอก</button>
+        <button data-audio="ching">ฉิ่ง</button>
+        <button data-audio="khong">ฆ้องวงใหญ่</button>
+        <button data-audio="taphon">ตะโพน</button>
+      </div>
+    </div>
+
+    <div class="actions"><button data-nav="station2">สถานีถัดไป →</button><button class="secondary" data-nav="map">← แผนที่</button></div>
+  </div></section>
+
+  <section id="station2" class="station"><div class="panel">
+    <div class="tag">STATION 02</div><h2>เมืองที่สืบทอดเสียง</h2><div class="thai-divider">❖</div>
+    <div class="timeline">
+      <div class="card"><div class="year">พ.ศ. 2506</div><div><h3>จุดเริ่มวงดนตรีไทยของกรุงเทพฯ</h3><p>ก่อตั้งวงดนตรีไทยของเทศบาลนครกรุงเทพ เพื่อสนับสนุนดนตรีไทยและนาฏศิลป์ไทย</p></div></div>
+      <div class="card"><div class="year">การเรียนรู้</div><div><h3>ถ่ายทอดสู่ประชาชน</h3><p>ศูนย์ฝึกดนตรีและกิจกรรมของกองการสังคีตช่วยเปิดพื้นที่ให้ประชาชนหลายช่วงวัยได้เรียนรู้ดนตรี</p></div></div>
+      <div class="card"><div class="year">ปัจจุบัน</div><div><h3>เมืองกลายเป็นพื้นที่ของเสียง</h3><p>กรุงเทพฯ ใช้พื้นที่สาธารณะเป็นเวทีให้ดนตรีและศิลปะการแสดงเข้าถึงผู้คนมากขึ้น</p></div></div>
+    </div>
+    <div class="actions"><button data-nav="station3">สถานีถัดไป →</button><button class="secondary" data-nav="map">← แผนที่</button></div>
+  </div></section>
+
+  <section id="station3" class="station"><div class="panel">
+    <div class="tag">STATION 03</div><h2>Bangkok Today</h2><div class="thai-divider">❖</div>
+    <p><b>Bangkok Street Performer</b> เป็นโครงการของกรุงเทพมหานครที่เปิดพื้นที่สาธารณะให้ศิลปินเดี่ยวและกลุ่มสมัครเพื่อเล่นดนตรีหรือแสดงสตรีทโชว์แบบเปิดหมวกได้ สะท้อนว่าดนตรีของกรุงเทพฯ ไม่ได้อยู่เฉพาะในห้องเรียนหรือเวทีทางการ แต่เชื่อมกับชีวิตประจำวันของเมืองด้วย</p>
+    <div class="grid">
+      <div class="card"><div class="note">🎤</div><h3>เมือง = เวที</h3><p>พื้นที่สาธารณะสามารถเป็นพื้นที่สร้างสรรค์สำหรับศิลปินและประชาชนที่ต้องการแสดงออกทางดนตรี</p></div>
+      <div class="card"><div class="note">🌆</div><h3>อดีตพบปัจจุบัน</h3><p>ดนตรีในกรุงเทพฯ จึงมีทั้งการสืบทอดศิลปวัฒนธรรมดั้งเดิมและกิจกรรมทางดนตรีแบบร่วมสมัย</p></div>
+    </div>
+    <div class="actions"><button data-nav="quiz">ไป Final Quiz →</button><button class="secondary" data-nav="map">← แผนที่</button></div>
+  </div></section>
+<section id="quiz" class="station"><div class="panel quiz">
+    <div class="tag">FINAL CHALLENGE</div><h2>Quiz 12 ข้อ</h2><div class="thai-divider">❖</div>
+    <div id="qbox"></div><div class="feedback" id="feedback"></div>
+    <div class="actions"><button id="next" style="display:none">ข้อต่อไป →</button><button class="secondary" data-nav="map">← แผนที่</button></div>
+  </div></section>
+
+  <section id="complete" class="station"><div class="panel" style="text-align:center">
+<div class="tag">MISSION COMPLETE</div><h1 style="font-size:clamp(46px,8vw,76px)">SOUND<br>EXPLORER</h1>
+<p id="result"></p><h3>🏅 รับเกียรติบัตร</h3>
+<p id="certificateRequirement">🔒 ต้องตอบถูกครบ <b>12/12 ข้อ</b> จึงจะสามารถรับเกียรติบัตรได้</p>
+<div id="certificateForm">
+  <input id="certNameInput" class="cert-input" placeholder="ชื่อ–นามสกุล" maxlength="60">
+  <div class="actions" style="justify-content:center"><button id="makeCertBtn" type="button" onclick="makeCertificate()">สร้างเกียรติบัตร ✦</button></div>
+</div>
+<div id="certWrap" style="display:none">
+<div id="certificate" class="certificate"><div class="cert-inner">
+<div class="cert-seal">♬</div><div style="font-family:serif;font-size:36px;color:#9b7133">✦ ๑ ✦</div>
+<div style="letter-spacing:.2em;font-weight:900">BANGKOK SOUNDSCAPE</div>
+<h3 style="font-size:38px;color:#4a1b28">เกียรติบัตรแห่งการสำรวจเสียง</h3>
+<p>ขอมอบเกียรติบัตรฉบับนี้เพื่อแสดงว่า</p><div id="certName" class="cert-name"></div>
+<p>ได้สำเร็จภารกิจการเรียนรู้ใน<br><b>“พิพิธภัณฑ์ดนตรีดิจิทัลกรุงเทพฯ”</b><br>และผ่านกิจกรรม Bangkok Soundscape ครบถ้วน</p>
+<h3 id="certScore" style="color:#79592b"></h3>
+<div class="cert-ribbon">CERTIFICATE OF COMPLETION • SOUND EXPLORER</div><p style="margin-top:38px">Bangkok Soundscape · Digital Music Museum</p>
+</div></div>
+<div class="actions" style="justify-content:center"><button id="printCertBtn" type="button" onclick="printCertificate()">🖨 บันทึก / พิมพ์เกียรติบัตร</button></div>
+</div>
+<div class="actions" style="justify-content:center"><button id="resetBtn">🔄 เล่นอีกครั้ง</button><button class="secondary" data-nav="sources">ดูแหล่งข้อมูล</button></div>
+</div></section>
+
+  <section id="sources" class="station"><div class="panel source">
+    <div class="tag">SOURCES & AUDIO CREDITS</div><h2>แหล่งข้อมูลและเครดิตเสียง</h2><div class="thai-divider">❖</div>
+    <div class="credit"><h3>ข้อมูลประกอบนิทรรศการ</h3>
+      <p>1. กรุงเทพมหานคร — กองการสังคีต: ประวัติความเป็นมา<br>
+      2. กรุงเทพมหานคร — Bangkok Street Performer / แพลตฟอร์มพื้นที่สาธารณะ<br>
+      3. ข้อมูลกิจกรรมและการเรียนรู้ด้านดนตรีของกรุงเทพมหานคร</p>
+    </div>
+    <div class="credit"><h3>เสียงเครื่องดนตรีจริง</h3>
+      <p>SEATHENCITY — ตัวอย่างเสียงเครื่องดนตรีไทย: ระนาดเอก (Ranad Ek), ฆ้องวงใหญ่ (Khong Wong Yai), ฉิ่ง (Ching) และตะโพน (Taphon)</p>
+      <p class="small">เสียงไม่ใช่เสียงสังเคราะห์ และไม่มีเสียงบรรยายชื่อเครื่องดนตรีก่อนเล่น</p>
+    </div>
+    <div class="actions"><button class="secondary" data-nav="home">กลับหน้าแรก</button></div>
+  </div></section>
+
+  <div class="footer">Bangkok Soundscape • พิพิธภัณฑ์ดนตรีดิจิทัลกรุงเทพฯ • โครงงานสร้างสรรค์ทางดนตรีโดยใช้เทคโนโลยี</div>
+</div>
+
+<audio id="realAudio" preload="none" playsinline></audio>
+
+<script>
+(function(){
+  let score=0, qi=0, answered=false;
+  const audio=document.getElementById('realAudio');
+  // ===== REAL-TIME VISITOR SYSTEM =====
+  let realtimeClient=null;
+  let realtimeChannel=null;
+  let realtimeConfig=null;
+
+  function setVisitorNumber(value){
+    const el=document.getElementById('visitorCount');
+    if(el)el.textContent=Number(value||0).toLocaleString('th-TH');
+  }
+  function setTotalVisitors(value){
+    const el=document.getElementById('totalVisitorCount');
+    if(el)el.textContent=Number(value||0).toLocaleString('th-TH');
+  }
+
+  async function getRealtimeConfig(){
+    if(realtimeConfig)return realtimeConfig;
+    const r=await fetch('/api/config',{cache:'no-store'});
+    if(!r.ok)throw new Error('ไม่สามารถโหลดการตั้งค่า Realtime');
+    realtimeConfig=await r.json();
+    if(!realtimeConfig.url||!realtimeConfig.anonKey)throw new Error('ตั้งค่า Supabase ไม่ครบ');
+    return realtimeConfig;
+  }
+
+  async function loadTotalVisits(increment){
+    const endpoint=increment?'/api/visit':'/api/visit?read=1';
+    const options=increment?{method:'POST',headers:{'Content-Type':'application/json'}}:{cache:'no-store'};
+    const r=await fetch(endpoint,options);
+    if(!r.ok)throw new Error('ไม่สามารถอ่านจำนวนผู้เข้าชมทั้งหมด');
+    const data=await r.json();
+    setTotalVisitors(data.total);
+  }
+
+  async function initRealtimeVisitors(){
+    try{
+      const cfg=await getRealtimeConfig();
+      realtimeClient=window.supabase.createClient(cfg.url,cfg.anonKey);
+
+      // Count one browser session as one online visitor.
+      let visitorKey=sessionStorage.getItem('bangkokSoundscapeVisitorKey');
+      if(!visitorKey){
+        visitorKey=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(36).slice(2));
+        sessionStorage.setItem('bangkokSoundscapeVisitorKey',visitorKey);
+      }
+
+      realtimeChannel=realtimeClient.channel('bangkok-soundscape-online',{
+        config:{presence:{key:visitorKey}}
+      });
+
+      realtimeChannel
+        .on('presence',{event:'sync'},function(){
+          const state=realtimeChannel.presenceState();
+          const online=Object.keys(state||{}).length;
+          setVisitorNumber(online);
+        })
+        .on('presence',{event:'join'},function(){
+          const state=realtimeChannel.presenceState();
+          setVisitorNumber(Object.keys(state||{}).length);
+        })
+        .on('presence',{event:'leave'},function(){
+          const state=realtimeChannel.presenceState();
+          setVisitorNumber(Object.keys(state||{}).length);
+        })
+        .on('postgres_changes',{
+          event:'UPDATE',
+          schema:'public',
+          table:'site_stats',
+          filter:'id=eq.1'
+        },function(payload){
+          if(payload && payload.new)setTotalVisitors(payload.new.total_visits);
+        })
+        .subscribe(async function(status){
+          if(status==='SUBSCRIBED'){
+            await realtimeChannel.track({
+              online_at:new Date().toISOString()
+            });
+          }
+        });
+
+      // Count this browser session once toward total visits.
+      if(!sessionStorage.getItem('bangkokSoundscapeVisitCounted')){
+        sessionStorage.setItem('bangkokSoundscapeVisitCounted','1');
+        await loadTotalVisits(true);
+      }else{
+        await loadTotalVisits(false);
+      }
+    }catch(err){
+      console.warn('Realtime visitor system:',err);
+      setVisitorNumber(0);
+      try{ await loadTotalVisits(false); }catch(e){ setTotalVisitors(0); }
+    }
+  }
+
+  initRealtimeVisitors();
+
+
+  const tracks={
+    ranat:{name:'ระนาดเอก • Ranat Ek',url:'https://seathencity.com/wp-content/uploads/2022/12/ระนาดเอก.mp3'},
+    khong:{name:'ฆ้องวงใหญ่ • Khong Wong Yai',url:'https://seathencity.com/wp-content/uploads/2022/12/ฆ้องวงใหญ่.mp3'},
+    ching:{name:'ฉิ่ง • Ching',url:'https://seathencity.com/wp-content/uploads/2022/12/ฉิ่ง.mp3'},
+    taphon:{name:'ตะโพน • Taphon',url:'https://seathencity.com/wp-content/uploads/2022/12/ตะโพน.mp3'},
+    ensemble:{name:'วงปี่พาทย์ • Sathukan Ensemble',url:'https://rootsofrhythm.net/wp-content/uploads/2022/07/85_Sathukan_ensemble.mp3'}
+  };
+
+  const qsSource=[
+    {q:"วงดนตรีไทยของเทศบาลนครกรุงเทพเริ่มก่อตั้งในปีใด?",choices:["พ.ศ. 2520","พ.ศ. 2506","พ.ศ. 2540","พ.ศ. 2560"],answer:1},
+    {q:"หน่วยงานของกรุงเทพมหานครที่เกี่ยวข้องกับการส่งเสริมงานดนตรีในโครงงานนี้คือข้อใด?",choices:["กองการสังคีต","สำนักการระบายน้ำ","กองโยธา","กองทะเบียน"],answer:0},
+    {q:"Bangkok Street Performer มีแนวคิดสำคัญข้อใด?",choices:["จัดแสดงเฉพาะในโรงเรียน","ห้ามแสดงดนตรีกลางแจ้ง","เปิดพื้นที่สาธารณะให้ศิลปินแสดง","ใช้เฉพาะดนตรีไทย"],answer:2},
+    {q:"เครื่องดนตรีชนิดใดมีลูกเครื่องเรียงอยู่บนรางรูปเรือ?",choices:["ฉิ่ง","ตะโพน","ฆ้องวงใหญ่","ระนาดเอก"],answer:3},
+    {q:"เครื่องดนตรีชนิดใดใช้ช่วยกำกับจังหวะด้วยเสียง “ฉิ่ง–ฉับ”?",choices:["ฉิ่ง","ระนาดเอก","ฆ้องวงใหญ่","ตะโพน"],answer:0},
+    {q:"ฆ้องวงใหญ่ในเว็บไซต์อธิบายว่ามีลูกฆ้องกี่ลูก?",choices:["14 ลูก","16 ลูก","18 ลูก","20 ลูก"],answer:1},
+    {q:"ตะโพนมีลักษณะเด่นข้อใด?",choices:["เป็นเครื่องเป่าลิ้นคู่","เป็นเครื่องสายใช้คันชัก","เป็นกลองสองหน้าที่ใช้มือและนิ้วตี","เป็นโลหะคู่ขนาดเล็ก"],answer:2},
+    {q:"Station 01 รวมส่วนใดไว้ด้วยกัน?",choices:["Bangkok Today กับ Quiz","ข้อมูลเครื่องดนตรีกับ Sound Lab","Quiz กับ Certificate","ประวัติกองการสังคีตกับแบบสอบถาม"],answer:1},
+    {q:"เสียงที่ใช้ใน Station 01 เป็นเสียงประเภทใด?",choices:["เสียงบันทึกเครื่องดนตรีจริง","เสียงคนพูดเลียนแบบเครื่องดนตรี","ไม่มีระบบเสียง","เสียงบรรยายก่อนเสียงดนตรี"],answer:0},
+    {q:"ข้อใดเป็นเครื่องดนตรีที่นำเสนอใน Bangkok Soundscape?",choices:["ซอด้วง ขลุ่ย กรับ โทน","ระนาดเอก ฉิ่ง ฆ้องวงใหญ่ ตะโพน","จะเข้ ซออู้ กลองยาว ปี่","ขิม แคน โหวด กลองแขก"],answer:1},
+    {q:"แนวคิดสำคัญของ Bangkok Soundscape คือข้อใด?",choices:["นำเสนอเฉพาะดนตรีสากล","ใช้เว็บไซต์เป็นแบบทดสอบอย่างเดียว","ตัดเสียงออกจากการเรียนรู้","เชื่อมดนตรีไทย กรุงเทพฯ และเทคโนโลยีดิจิทัลเข้าด้วยกัน"],answer:3},
+    {q:"ระนาดเอกในเว็บไซต์เชื่อมโยงกับองค์ประกอบทางดนตรีด้านใดเด่นที่สุด?",choices:["ทำนอง","การร้อง","ความเงียบ","การประสานเสียงแบบตะวันตก"],answer:0},
+    {q:"ฉิ่งจัดเป็นเครื่องดนตรีที่มีบทบาทเด่นด้านใด?",choices:["ดำเนินทำนองหลัก","กำกับจังหวะ","บรรเลงด้วยการเป่า","บรรเลงด้วยคันชัก"],answer:1},
+    {q:"ผู้บรรเลงฆ้องวงใหญ่อยู่ในตำแหน่งใด?",choices:["ยืนด้านหลังวง","นั่งกลางวงฆ้อง","ยืนหน้าวง","นั่งใต้รางฆ้อง"],answer:1},
+    {q:"ตะโพนมีบทบาทสำคัญอย่างไรในวงดนตรีไทย?",choices:["ดำเนินทำนองหลัก","กำกับจังหวะและหน้าทับ","บรรเลงทำนองด้วยการเป่า","สร้างเสียงประสานแบบดนตรีตะวันตก"],answer:1},
+    {q:"Station 02 ของเว็บไซต์กล่าวถึงเนื้อหาใด?",choices:["เมืองที่สืบทอดเสียง","การออกเกียรติบัตร","วิธีเขียนโปรแกรม","แบบสอบถามความพึงพอใจ"],answer:0},
+    {q:"Station 03 หรือ Bangkok Today เชื่อมโยงกับเรื่องใด?",choices:["การสร้าง Web Audio API","ดนตรีและศิลปะการแสดงในพื้นที่สาธารณะ","ประวัติเครื่องสายตะวันตก","การสร้าง Certificate"],answer:1},
+    {q:"ข้อใดอธิบาย Digital Collection ใน Station 01 ได้เหมาะสมที่สุด?",choices:["พื้นที่รวบรวมและนำเสนอเครื่องดนตรีไทยในรูปแบบดิจิทัล","ระบบสมัครสมาชิกเว็บไซต์","หน้าสำหรับพิมพ์รายงาน","ระบบคำนวณคะแนนแบบสอบถาม"],answer:0},
+    {q:"Sound Lab มีจุดประสงค์หลักข้อใด?",choices:["ให้ผู้ใช้ทดลองฟังและเปรียบเทียบเสียงเครื่องดนตรี","ใช้แทนการอ่านเนื้อหาทั้งหมด","ใช้สร้างบัญชีผู้ใช้","ใช้ดาวน์โหลดเพลงเชิงพาณิชย์"],answer:0},
+    {q:"หลังจากเรียนรู้เนื้อหา ผู้ใช้งานทำกิจกรรมใดเพื่อทบทวนความรู้?",choices:["Final Quiz","สมัครสมาชิก","อัปโหลดเพลง","เขียนโปรแกรมใหม่"],answer:0}
+  ];
+
+  function shuffleArray(arr){
+    const a=arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function buildQuiz(){
+    const selected=shuffleArray(qsSource).slice(0,12);
+    return selected.map(item=>{
+      const packed=item.choices.map((text,index)=>({text,correct:index===item.answer}));
+      const shuffled=shuffleArray(packed);
+      return {
+        q:item.q,
+        choices:shuffled.map(x=>x.text),
+        answer:shuffled.findIndex(x=>x.correct)
+      };
+    });
+  }
+
+  let qs=buildQuiz();
+
+  function nav(id){
+    const target=document.getElementById(id); if(!target)return;
+    document.querySelectorAll('.station').forEach(x=>x.classList.remove('active'));
+    target.classList.add('active'); window.scrollTo(0,0);
+    if(id==='quiz') renderQ();
+  }
+
+  document.addEventListener('click',function(e){
+    const navEl=e.target.closest('[data-nav]');
+    if(navEl){e.preventDefault();nav(navEl.getAttribute('data-nav'));return}
+    const a=e.target.closest('[data-audio]');
+    if(a){e.preventDefault();playTrack(a.getAttribute('data-audio'));return}
+    const answerEl=e.target.closest('[data-answer]');
+    if(answerEl){e.preventDefault();answer(+answerEl.getAttribute('data-answer'));return}
+  },true);
+
+  function status(text,playing){
+    ['nowPlaying','labPlaying'].forEach(id=>{const x=document.getElementById(id);if(x)x.textContent=text});
+    ['liveDot','labDot'].forEach(id=>{const x=document.getElementById(id);if(x)x.classList.toggle('playing',!!playing)});
+  }
+
+  async function playTrack(key){
+    const t=tracks[key];if(!t)return;
+    try{
+      audio.pause();audio.currentTime=0;audio.src=t.url;audio.load();
+      status('กำลังเล่น: '+t.name,true);
+      await audio.play();
+    }catch(err){
+      status('Safari ไม่สามารถโหลดเสียงได้ กรุณาแตะปุ่มอีกครั้งหรือเช็กอินเทอร์เน็ต',false);
+    }
+  }
+  audio.addEventListener('ended',()=>status('เลือกเครื่องดนตรีเพื่อฟังเสียงอื่นต่อได้',false));
+  audio.addEventListener('error',()=>status('โหลดเสียงไม่สำเร็จ กรุณาลองอีกครั้ง',false));
+  // Lock certificate controls at the start; they unlock only at 12/12.
+  (function initCertificateLock(){
+    const input=document.getElementById('certNameInput');
+    const btn=document.getElementById('makeCertBtn');
+    if(input)input.disabled=true;
+    if(btn){
+      btn.disabled=true;
+      btn.style.opacity='.45';
+      btn.style.cursor='not-allowed';
+    }
+  })();
+
+
+  document.getElementById('enterBtn').addEventListener('click',function(){
+    document.getElementById('gate').classList.add('hide');
+    // No narration and no autoplay music — user chooses what to hear.
+  });
+
+  function renderQ(){
+    answered=false;
+    document.getElementById('next').style.display='none';
+    const q=qs[qi], labels=['ก','ข','ค','ง'];
+    let s='<h3>ข้อ '+(qi+1)+'/'+qs.length+' • '+q.q+'</h3>';
+    q.choices.forEach((a,i)=>s+='<button data-answer="'+i+'">'+labels[i]+'. '+a+'</button>');
+    document.getElementById('qbox').innerHTML=s;
+    document.getElementById('feedback').textContent='';
+  }
+
+  function answer(i){
+    if(answered)return;
+    answered=true;
+    const ok=i===qs[qi].answer, labels=['ก','ข','ค','ง'];
+    if(ok){
+      score++;
+      document.getElementById('feedback').textContent='✅ ถูกต้อง! ได้รับ Music Note 1 ดวง';
+    }else{
+      document.getElementById('feedback').textContent='❌ ยังไม่ถูก คำตอบที่ถูกคือ '+labels[qs[qi].answer]+'. '+qs[qi].choices[qs[qi].answer];
+    }
+    document.getElementById('score').textContent=score;
+    document.getElementById('bar').style.width=(score/qs.length*100)+'%';
+    document.getElementById('next').style.display='inline-block';
+
+    // Certificate remains locked until ALL questions are answered correctly.
+    var certInput=document.getElementById('certNameInput');
+    var certBtn=document.getElementById('makeCertBtn');
+    var certReq=document.getElementById('certificateRequirement');
+    var unlocked=(score===qs.length);
+    if(certInput)certInput.disabled=!unlocked;
+    if(certBtn){
+      certBtn.disabled=!unlocked;
+      certBtn.style.opacity=unlocked?'1':'.45';
+      certBtn.style.cursor=unlocked?'pointer':'not-allowed';
+    }
+    if(certReq)certReq.innerHTML=unlocked
+      ? '✅ คุณตอบถูกครบ <b>'+qs.length+'/'+qs.length+' ข้อ</b> แล้ว กรอกชื่อเพื่อรับเกียรติบัตร'
+      : 'ต้องตอบถูกครบ <b>'+qs.length+'/'+qs.length+' ข้อ</b> จึงจะสามารถรับเกียรติบัตรได้';
+  }
+
+  document.getElementById('next').addEventListener('click',function(){
+    qi++;
+    if(qi>=qs.length){
+      document.getElementById('result').textContent='คะแนนของคุณ '+score+'/'+qs.length+' Music Notes';
+      nav('complete');
+    }else renderQ();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click',function(){
+    score=0;qi=0;answered=false;qs=buildQuiz();
+    document.getElementById('score').textContent='0';
+    document.getElementById('bar').style.width='0%';
+    document.getElementById('certWrap').style.display='none';
+    document.getElementById('certNameInput').value='';
+    document.getElementById('certNameInput').disabled=true;
+    document.getElementById('makeCertBtn').disabled=true;
+    document.getElementById('makeCertBtn').style.opacity='.45';
+    document.getElementById('makeCertBtn').style.cursor='not-allowed';
+    document.getElementById('certificateRequirement').innerHTML='🔒 ต้องตอบถูกครบ <b>12/12 ข้อ</b> จึงจะสามารถรับเกียรติบัตรได้';
+    nav('map');
+  });
+
+
+
+
+window.makeCertificate=function(){
+  var input=document.getElementById('certNameInput');
+  var name=(input&&input.value?input.value:'').trim();
+  var total=(typeof qs!=='undefined' ? qs.length : 12);
+  var current=(typeof score!=='undefined' ? score : 0);
+
+  // Certificate is available ONLY for a perfect score.
+  if(current!==total){
+    var req=document.getElementById('certificateRequirement');
+    if(req)req.innerHTML='❌ ต้องตอบถูกครบ <b>'+total+'/'+total+' ข้อ</b> จึงจะได้รับเกียรติบัตร';
+    if(input)input.disabled=true;
+    return false;
+  }
+
+  if(!name){
+    if(input){input.disabled=false;input.focus();input.placeholder='กรุณากรอกชื่อ–นามสกุลก่อน';}
+    return false;
+  }
+
+  var n=document.getElementById('certName'), sc=document.getElementById('certScore'), wrap=document.getElementById('certWrap');
+  if(n)n.textContent=name;
+  if(sc)sc.textContent='ผลคะแนน '+current+'/'+total+' Music Notes • ผ่านเกณฑ์คะแนนเต็ม';
+  if(wrap){
+    wrap.style.display='block';
+    wrap.hidden=false;
+    setTimeout(function(){wrap.scrollIntoView({behavior:'smooth',block:'start'});},50);
+  }
+  return false;
+};
+window.printCertificate=function(){window.print();};
+
+})();
+</script>
+</body>
+</html>
